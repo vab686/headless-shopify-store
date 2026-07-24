@@ -1,28 +1,24 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import useAuth from "@/hooks/useAuth";
 
-import {
-    useEffect
-} from "react";
-
-import useAuth from "../../hooks/useAuth";
-
-export default function ProtectedRoute({ children }) {
-
+export default function ProtectedRoute({
+    children
+}) {
     const router = useRouter();
-
     const {
         authenticated,
         loading
     } = useAuth();
 
     useEffect(() => {
-
-        if (!loading && !authenticated) {
-
+        if (
+            !loading &&
+            !authenticated
+        ) {
             router.replace("/login");
-
         }
 
     }, [
@@ -32,21 +28,14 @@ export default function ProtectedRoute({ children }) {
     ]);
 
     if (loading) {
-
         return (
-            <p>
+            <div className="flex min-h-screen items-center justify-center">
                 Loading...
-            </p>
+            </div>
         );
-
     }
-
     if (!authenticated) {
-
         return null;
-
     }
-
     return children;
-
 }

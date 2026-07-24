@@ -10,8 +10,10 @@ export default function AddToCartButton({ product }) {
             productId: product.id,
             variantId: product.variantId,
             title: product.title,
-            image: product.featuredImage,
-            price: product.price,
+            image: product.image ?? product.featuredImage?.url ?? "",
+            price: typeof product.price === "number"
+                ? product.price
+                : parseFloat(product.priceRange?.minVariantPrice?.amount ?? product.price ?? 0),
             quantity: 1
         });
     };

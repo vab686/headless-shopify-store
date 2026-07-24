@@ -1,35 +1,85 @@
-const { OAuth2Client } = require("google-auth-library");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const ApiError = require("../utils/ApiError");
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+class AuthService {
+    async signup({ name, email, password }) {
+        const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
 
-const verifyGoogleToken = async (token) => {
-    const ticket = await client.verifyIdToken({
-        idToken: token,
-        audience: process.env.GOOGLE_CLIENT_ID
-    });
+        if (existingUser) {
+            throw new ApiError("User already exists");
+        }
 
-    return ticket.getPayload();
-};
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-const findOrCreateUser = async (payload) => {
-    let user = await User.findOne({
-        googleId: payload.sub
-    });
-
-    if (!user) {
-        user = await User.create({
-            googleId: payload.sub,
-            name: payload.name,
-            email: payload.email,
-            picture: payload.picture
+        const user = await User.create({
+            name,
+            email: email.toLowerCase().trim(),
+            password: hashedPassword
         });
+
+        const token = this.generateToken(user._id);
+
+        return {
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
+        };
     }
 
-    return user;
-};
+    async login({ email, password }) {
+        const user = await User.findOne({ email: email.toLowerCase().trim() });
 
-module.exports = {
-    verifyGoogleToken,
-    findOrCreateUser
-};
+        if (!user) {
+            throw new ApiError("Invalid email or password");
+        }
+
+        const isPasswordValid = await bcrypt.compare(
+            password,
+            user.password
+        );
+
+        if (!isPasswordValid) {
+            throw new ApiError("Invalid email or password");
+        }
+
+        const token = this.generateToken(user._id);
+
+        return {
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
+        };
+    }
+
+    async getCurrentUser(userId) {
+        const user = await User.findById(userId).select("-password");
+
+        if (!user) {
+            throw new ApiError("User not found");
+        }
+
+        return user;
+    }
+
+    generateToken(userId) {
+        return jwt.sign(
+            {
+                userId
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: "7d"
+            }
+        );
+    }
+}
+
+module.exports = new AuthService();

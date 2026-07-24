@@ -5,7 +5,7 @@ const productService = require("../services/product.service");
 
 exports.getProducts = asyncHandler(async (req, res) => {
 
-    const products = await productService.getProducts();
+    const products = await productService.getProducts(req.query);
 
     res.json(
         new ApiResponse(

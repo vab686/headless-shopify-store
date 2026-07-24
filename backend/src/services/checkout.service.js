@@ -15,10 +15,20 @@ const checkout = async (userId, shippingAddress) => {
         return sum + (item.price * item.quantity);
     }, 0);
 
+    const formattedAddress = {
+        fullName: shippingAddress?.fullName || "Guest",
+        phone: shippingAddress?.phone || "0000000000",
+        address: shippingAddress?.address || "Address",
+        city: shippingAddress?.city || "City",
+        state: shippingAddress?.state || "State",
+        country: shippingAddress?.country || "India",
+        postalCode: shippingAddress?.postalCode || "000000"
+    };
+
     const order = await Order.create({
         user: userId,
         items: cart.items,
-        shippingAddress,
+        shippingAddress: formattedAddress,
         total,
         paymentStatus: "PAID",
         orderStatus: "PLACED"

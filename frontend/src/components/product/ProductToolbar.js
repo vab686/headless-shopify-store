@@ -9,7 +9,7 @@ export default function ProductToolbar({
     setCategory
 }) {
     return (
-        <div className="mb-8 flex flex-col gap-4 md:flex-row">
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center">
             <ProductSearch
                 value={search}
                 onChange={setSearch}

@@ -1,70 +1,54 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-
 import AuthLayout from "@/components/auth/AuthLayout";
-import LoginForm from "@/components/auth/LoginForm";
+import SignupForm from "@/components/auth/SignupForm";
 import useAuth from "@/hooks/useAuth";
 
-export default function LoginPage() {
-
+export default function SignupPage() {
+    const { signup } = useAuth();
     const router = useRouter();
-
-    const {
-        login
-    } = useAuth();
 
     const [loading, setLoading] =
         useState(false);
 
-    const handleLogin = async (data) => {
-
+    const handleSignup = async (data) => {
         try {
-
             setLoading(true);
-
-            await login(data);
-
+            await signup(data);
             router.push("/products");
-
         } catch (error) {
-
             alert(
                 error.response?.data?.message ||
                 error.message ||
-                "Login failed."
+                "Signup failed."
             );
-
         } finally {
-
             setLoading(false);
-
         }
-
     };
 
     return (
         <AuthLayout
-            title="Welcome Back"
+            title="Create Account"
             footer={
                 <p>
-                    Don't have an account?{" "}
+                    Already have an account?{" "}
                     <Link
-                        href="/signup"
+                        href="/login"
                         className="font-semibold"
                     >
-                        Sign Up
+                        Login
                     </Link>
                 </p>
             }
         >
-            <LoginForm
+            <SignupForm
                 loading={loading}
-                onSubmit={handleLogin}
+                onSubmit={handleSignup}
             />
         </AuthLayout>
     );
-
 }

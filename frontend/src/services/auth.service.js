@@ -1,12 +1,19 @@
 import api from "../lib/axios";
 import { API_ENDPOINTS } from "../lib/constants";
 
-export const loginWithGoogle = async (token) => {
+export const signup = async (data) => {
+    const response = await api.post(
+        API_ENDPOINTS.SIGNUP,
+        data
+    );
+
+    return response.data.data;
+};
+
+export const login = async (data) => {
     const response = await api.post(
         API_ENDPOINTS.LOGIN,
-        {
-            token
-        }
+        data
     );
     return response.data.data;
 };

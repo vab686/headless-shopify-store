@@ -44,21 +44,29 @@ export default function ProductsPage() {
         );
     }
 
+    const products = Array.isArray(data)
+        ? data
+        : (data?.products ?? []);
+
+    const categories = Array.isArray(data?.categories)
+        ? data.categories
+        : [];
+
     return (
         <PageContainer>
             <ProductToolbar
                 search={search}
                 category={category}
-                categories={data.categories ?? []}
+                categories={categories}
                 setSearch={setSearch}
                 setCategory={setCategory}
             />
 
-            {data.products.length === 0 ? (
+            {products.length === 0 ? (
                 <EmptyProducts />
             ) : (
                 <ProductGrid
-                    products={data.products}
+                    products={products}
                 />
             )}
         </PageContainer>

@@ -1,20 +1,24 @@
 # Shopify Headless Store Frontend
 
-A modern **Next.js 15** frontend for a Shopify Headless E-commerce application. This application integrates with a custom Express.js backend and Shopify Storefront API to provide a complete shopping experience including Google Authentication, Product Catalog, Cart, Wishlist, Checkout, Orders, and Activity Tracking.
+A modern **Next.js 15** frontend for a Headless Shopify Store. The application provides a complete e-commerce user interface that communicates with a custom backend API for authentication, product browsing, shopping cart, wishlist, checkout, orders, and activity tracking.
 
 ---
 
-## Features
+# Features
 
-### Authentication
+## Authentication & Authorization
 
-- Google OAuth Login
+- User Registration (Sign Up)
+- Email & Password Login
 - JWT Authentication
 - Protected Routes
 - Persistent Login
+- Automatic Session Restoration
 - Automatic Logout on Unauthorized Access
 
-### Products
+---
+
+## Products
 
 - Product Listing
 - Product Details
@@ -23,46 +27,60 @@ A modern **Next.js 15** frontend for a Shopify Headless E-commerce application. 
 - Responsive Product Grid
 - Image Optimization
 
-### Shopping Cart
+---
+
+## Shopping Cart
 
 - Add to Cart
-- Update Quantity
+- Update Item Quantity
 - Remove Items
 - Cart Summary
 - Empty Cart State
 
-### Wishlist
+---
 
-- Add to Wishlist
-- Remove from Wishlist
-- Wishlist Page
+## Wishlist
 
-### Checkout
+- Add Products to Wishlist
+- Remove Products from Wishlist
+- Wishlist Management
 
-- Shipping Information
-- Order Placement
+---
+
+## Checkout
+
+- Shipping Information Form
+- Order Review
+- Place Order
 - Order Confirmation
 
-### Orders
+---
+
+## Orders
 
 - Order History
+- Order Details
 - Order Summary
 
-### Activity Dashboard
+---
+
+## Activity Dashboard
 
 - Activity Timeline
 - Activity Summary
-- User Actions Tracking
+- User Activity Tracking
 
-### UI Features
+---
+
+## User Interface
 
 - Responsive Design
 - Tailwind CSS
-- Loading Skeletons
-- Toast Notifications
+- Loading States
 - Global Error Handling
-- 404 Page
+- Toast Notifications
 - Error Boundary
+- Custom 404 Page
 
 ---
 
@@ -71,9 +89,9 @@ A modern **Next.js 15** frontend for a Shopify Headless E-commerce application. 
 - Next.js 15 (App Router)
 - React 19
 - Tailwind CSS
-- React Query (TanStack Query)
 - Axios
-- Google OAuth
+- React Context API
+- TanStack React Query
 - React Hot Toast
 - Lucide React Icons
 
@@ -86,14 +104,18 @@ src/
 │
 ├── app/
 │   ├── (auth)/
-│   │   └── login/
+│   │   ├── login/
+│   │   └── signup/
+│   │
 │   ├── (protected)/
 │   │   ├── activity/
 │   │   ├── cart/
 │   │   ├── checkout/
 │   │   ├── orders/
 │   │   ├── products/
-│   │   └── wishlist/
+│   │   ├── wishlist/
+│   │   └── layout.js
+│   │
 │   ├── error.js
 │   ├── loading.js
 │   ├── not-found.js
@@ -103,6 +125,11 @@ src/
 ├── components/
 │   ├── activity/
 │   ├── auth/
+│   │   ├── AuthLayout.jsx
+│   │   ├── LoginForm.jsx
+│   │   ├── SignupForm.jsx
+│   │   └── ProtectedRoute.jsx
+│   │
 │   ├── cart/
 │   ├── checkout/
 │   ├── common/
@@ -111,8 +138,10 @@ src/
 │   └── wishlist/
 │
 ├── context/
+│   └── AuthContext.js
 │
 ├── hooks/
+│   └── useAuth.js
 │
 ├── lib/
 │   ├── axios.js
@@ -125,8 +154,10 @@ src/
 ├── queries/
 │
 ├── services/
+│   └── auth.service.js
 │
 ├── utils/
+│   └── storage.js
 │
 └── middleware.js
 ```
@@ -152,27 +183,24 @@ npm install
 
 ---
 
-## Environment Variables
+# Environment Variables
 
 Create a `.env.local` file in the project root.
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:5000/api
-
-NEXT_PUBLIC_GOOGLE_CLIENT_ID=YOUR_GOOGLE_CLIENT_ID
-
 NEXT_PUBLIC_APP_NAME=Shopify Headless Store
 ```
 
 ---
 
-## Run Development Server
+# Run Development Server
 
 ```bash
 npm run dev
 ```
 
-Application will start on
+Application will be available at:
 
 ```
 http://localhost:3000
@@ -180,7 +208,7 @@ http://localhost:3000
 
 ---
 
-# Build Application
+# Build for Production
 
 ```bash
 npm run build
@@ -196,132 +224,96 @@ npm start
 
 ---
 
-# Backend Requirements
+# Frontend Architecture
 
-The frontend requires the backend server to be running.
-
-Default Backend URL
-
+```text
+User
+ │
+ ▼
+Pages (App Router)
+ │
+ ▼
+Components
+ │
+ ▼
+React Context (Authentication)
+ │
+ ▼
+Services
+ │
+ ▼
+Axios Client
+ │
+ ▼
+Backend REST APIs
 ```
-http://localhost:5000/api
-```
-
----
-
-# API Endpoints Used
-
-## Authentication
-
-| Method | Endpoint |
-|---------|----------|
-| POST | /auth/google |
-| GET | /auth/me |
-
----
-
-## Products
-
-| Method | Endpoint |
-|---------|----------|
-| GET | /products |
-| GET | /products/:handle |
-
----
-
-## Cart
-
-| Method | Endpoint |
-|---------|----------|
-| GET | /cart |
-| POST | /cart |
-| PUT | /cart/:variantId |
-| DELETE | /cart/:variantId |
-
----
-
-## Wishlist
-
-| Method | Endpoint |
-|---------|----------|
-| GET | /wishlist |
-| POST | /wishlist |
-| DELETE | /wishlist/:productId |
-
----
-
-## Checkout
-
-| Method | Endpoint |
-|---------|----------|
-| POST | /checkout |
-
----
-
-## Orders
-
-| Method | Endpoint |
-|---------|----------|
-| GET | /checkout/orders |
-| GET | /checkout/orders/:id |
-
----
-
-## Activity
-
-| Method | Endpoint |
-|---------|----------|
-| GET | /activity/history |
-| GET | /activity/summary |
 
 ---
 
 # Authentication Flow
 
 ```text
-Google Login
-      │
-      ▼
-Google OAuth
-      │
-      ▼
-Backend Authentication
-      │
-      ▼
+Sign Up / Login
+        │
+        ▼
+Email & Password
+        │
+        ▼
 JWT Token
-      │
-      ▼
-Store in Local Storage
-      │
-      ▼
+        │
+        ▼
+Store Token
+(Local Storage)
+        │
+        ▼
+AuthContext
+        │
+        ▼
 Protected Routes
 ```
+
+---
+
+# Session Management
+
+The frontend uses **React Context API** together with **JWT Authentication** to manage user sessions.
+
+Features include:
+
+- Persistent Login
+- Automatic Session Restoration
+- Protected Pages
+- Global Authentication State
+- Automatic Logout on Unauthorized Requests
+- Axios Request Interceptor
+- Axios Response Interceptor
 
 ---
 
 # Application Flow
 
 ```text
-Login
-   │
-   ▼
+Sign Up / Login
+        │
+        ▼
 Products
-   │
-   ▼
+        │
+        ▼
 Product Details
-   │
-   ▼
-Add To Cart / Wishlist
-   │
-   ▼
+        │
+        ▼
+Add to Cart / Wishlist
+        │
+        ▼
 Cart
-   │
-   ▼
+        │
+        ▼
 Checkout
-   │
-   ▼
+        │
+        ▼
 Orders
-   │
-   ▼
+        │
+        ▼
 Activity Dashboard
 ```
 
@@ -331,9 +323,9 @@ Activity Dashboard
 
 | Command | Description |
 |----------|-------------|
-| npm run dev | Start development server |
-| npm run build | Build production application |
-| npm start | Start production server |
+| npm run dev | Start Development Server |
+| npm run build | Build Production Bundle |
+| npm start | Start Production Server |
 | npm run lint | Run ESLint |
 
 ---
@@ -341,12 +333,13 @@ Activity Dashboard
 # Performance Optimizations
 
 - Next.js App Router
-- Server Components
 - React Query Caching
-- Image Optimization
+- Axios Interceptors
 - Lazy Loading
-- API Request Caching
-- Responsive Images
+- Image Optimization
+- Responsive UI
+- Session Restoration
+- Context-based Authentication
 
 ---
 
@@ -354,24 +347,11 @@ Activity Dashboard
 
 - Global Error Boundary
 - Axios Response Interceptors
+- Authentication Error Handling
 - Unauthorized Redirect
-- Custom 404 Page
 - Loading UI
+- Custom 404 Page
 - Toast Notifications
-
----
-
-# Deployment
-
-## Vercel
-
-```bash
-npm install -g vercel
-```
-
-```bash
-vercel
-```
 
 ---
 
@@ -384,17 +364,17 @@ vercel
 
 ---
 
-# Future Improvements
+# Future Enhancements
 
 - Product Pagination
 - Product Sorting
-- Multiple Product Images
 - Product Reviews
+- Multiple Product Images
 - Recently Viewed Products
-- Coupon Management
-- Payment Gateway Integration
-- User Profile Management
+- User Profile Page
 - Address Management
+- Coupon Support
+- Payment Gateway Integration
 - Dark Mode
 - Internationalization (i18n)
 - Unit Testing
@@ -404,7 +384,7 @@ vercel
 
 # License
 
-This project is developed as part of the Shopify Headless Store assignment and is intended for educational and demonstration purposes.
+This frontend application was developed as part of the **Shopify Headless Store Assignment** and is intended for educational and demonstration purposes.
 
 ---
 
@@ -412,4 +392,4 @@ This project is developed as part of the Shopify Headless Store assignment and i
 
 **Developer:** Vaibhav Patel
 
-Built with **Next.js**, **React**, **Tailwind CSS**, **React Query**, and **Google OAuth**.
+Built with **Next.js 15**, **React 19**, **Tailwind CSS**, **TanStack React Query**, **Axios**, and **React Context API**.

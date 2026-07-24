@@ -13,7 +13,7 @@ export const addToCart = async (payload) => {
 
 export const updateCart = async (variantId, quantity) => {
     const response = await api.put(
-        `${API_ENDPOINTS.CART}/${variantId}`,
+        `${API_ENDPOINTS.CART}/${encodeURIComponent(variantId)}`,
         {
             quantity
         }
@@ -24,7 +24,7 @@ export const updateCart = async (variantId, quantity) => {
 
 export const removeCartItem = async (variantId) => {
     await api.delete(
-        `${API_ENDPOINTS.CART}/${variantId}`
+        `${API_ENDPOINTS.CART}/${encodeURIComponent(variantId)}`
     );
 };
 

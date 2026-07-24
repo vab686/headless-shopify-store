@@ -18,6 +18,10 @@ const wishlistSchema = new mongoose.Schema({
         type: String,
         default: ""
     },
+    handle: {
+        type: String,
+        default: ""
+    },
     price: {
         type: Number,
         required: true

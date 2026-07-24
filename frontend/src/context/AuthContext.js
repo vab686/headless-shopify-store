@@ -1,15 +1,17 @@
 "use client";
 
 import {
-    createContext,
-    useContext,
+    useCallback,
     useEffect,
-    useState
+    useState,
+    createContext,
+    useContext
 } from "react";
 
 import { storage } from "../utils/storage";
 import {
-    loginWithGoogle,
+    signup,
+    login,
     getProfile
 } from "../services/auth.service";
 
@@ -20,17 +22,12 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        initialize();
-    }, []);
-
-    const initialize = async () => {
+    const initialize = useCallback(async () => {
         const token = storage.getToken();
         if (!token) {
             setLoading(false);
             return;
         }
-
         try {
             const profile = await getProfile();
             setUser(profile);
@@ -39,19 +36,34 @@ export function AuthProvider({ children }) {
             setUser(null);
         }
         setLoading(false);
-    };
+    }, []);
 
-    const login = async (googleToken) => {
-        const data = await loginWithGoogle(
-            googleToken
+    useEffect(() => {
+        initialize();
+    }, [initialize]);
+
+    const loginUser = async (credentials) => {
+        const data = await login(
+            credentials
         );
         storage.setToken(data.token);
         setUser(data.user);
+        return data;
+    };
+
+    const signupUser = async (userData) => {
+        const data = await signup(
+            userData
+        );
+        storage.setToken(data.token);
+        setUser(data.user);
+        return data;
     };
 
     const logout = () => {
         storage.removeToken();
         setUser(null);
+        window.location.href = "/login";
     };
 
     return (
@@ -59,7 +71,8 @@ export function AuthProvider({ children }) {
             value={{
                 user,
                 loading,
-                login,
+                signup: signupUser,
+                login: loginUser,
                 logout,
                 authenticated: !!user
             }}

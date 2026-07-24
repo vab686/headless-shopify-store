@@ -12,5 +12,5 @@ export const addToWishlist = async (payload) => {
 };
 
 export const removeWishlistItem = async (productId) => {
-    await api.delete(`${API_ENDPOINTS.WISHLIST}/${productId}`);
+    await api.delete(`${API_ENDPOINTS.WISHLIST}/${encodeURIComponent(productId)}`);
 };

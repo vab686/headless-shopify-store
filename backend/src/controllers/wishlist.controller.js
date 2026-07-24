@@ -40,7 +40,7 @@ exports.removeFromWishlist = asyncHandler(async (req, res) => {
 
     await wishlistService.removeFromWishlist(
         req.user._id,
-        req.params.productId
+        decodeURIComponent(req.params.productId)
     );
 
     res.json(

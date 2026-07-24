@@ -23,30 +23,29 @@ const getHistory = async (userId) => {
 
 const getSummary = async (userId) => {
 
-    const result = await Activity.aggregate([
-        {
-            $match: {
-                user: userId
-            }
-        },
-        {
-            $group: {
-                _id: "$type",
-                count: {
-                    $sum: 1
-                }
-            }
-        },
-        {
-            $project: {
-                _id: 0,
-                activity: "$_id",
-                count: 1
-            }
-        }
-    ]);
+    const activities = await Activity.find({ user: userId });
 
-    return result;
+    const summary = {
+        productViews: 0,
+        cartActions: 0,
+        wishlistActions: 0,
+        orders: 0
+    };
+
+    activities.forEach(item => {
+        const type = item.type;
+        if (type === "PRODUCT_VIEW") {
+            summary.productViews++;
+        } else if (type === "ADD_TO_CART" || type === "REMOVE_FROM_CART") {
+            summary.cartActions++;
+        } else if (type === "ADD_TO_WISHLIST" || type === "REMOVE_FROM_WISHLIST") {
+            summary.wishlistActions++;
+        } else if (type === "ORDER_COMPLETED" || type === "CHECKOUT_INITIATED") {
+            summary.orders++;
+        }
+    });
+
+    return summary;
 
 }
 

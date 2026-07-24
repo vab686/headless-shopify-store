@@ -12,8 +12,11 @@ export default function AddToWishlistButton({ product }) {
                 mutate({
                     productId: product.id,
                     title: product.title,
-                    image: product.featuredImage,
-                    price: product.price
+                    handle: product.handle ?? "",
+                    image: product.featuredImage?.url ?? product.image ?? "",
+                    price: typeof product.price === "number"
+                        ? product.price
+                        : parseFloat(product.priceRange?.minVariantPrice?.amount ?? product.price ?? 0)
                 })
             }
             disabled={isPending}

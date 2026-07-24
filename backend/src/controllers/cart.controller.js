@@ -38,7 +38,7 @@ exports.updateCart = asyncHandler(async (req, res) => {
 
     const cart = await cartService.updateCartItem(
         req.user._id,
-        req.params.variantId,
+        decodeURIComponent(req.params.variantId),
         req.body.quantity
     );
 
@@ -56,7 +56,7 @@ exports.removeCart = asyncHandler(async (req, res) => {
 
     const cart = await cartService.removeCartItem(
         req.user._id,
-        req.params.variantId
+        decodeURIComponent(req.params.variantId)
     );
 
     res.json(

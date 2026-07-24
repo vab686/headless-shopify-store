@@ -6,7 +6,7 @@ export default function ActivitySummary({ summary }) {
                     Product Views
                 </h3>
                 <p className="mt-2 text-3xl font-bold">
-                    {summary.productViews}
+                    {summary?.productViews ?? summary?.PRODUCT_VIEWED ?? 0}
                 </p>
             </div>
 
@@ -15,7 +15,7 @@ export default function ActivitySummary({ summary }) {
                     Cart Actions
                 </h3>
                 <p className="mt-2 text-3xl font-bold">
-                    {summary.cartActions}
+                    {summary?.cartActions ?? summary?.CART_ADD ?? 0}
                 </p>
             </div>
 
@@ -24,7 +24,7 @@ export default function ActivitySummary({ summary }) {
                     Wishlist Actions
                 </h3>
                 <p className="mt-2 text-3xl font-bold">
-                    {summary.wishlistActions}
+                    {summary?.wishlistActions ?? summary?.WISHLIST_ADD ?? 0}
                 </p>
             </div>
 
@@ -33,7 +33,7 @@ export default function ActivitySummary({ summary }) {
                     Orders
                 </h3>
                 <p className="mt-2 text-3xl font-bold">
-                    {summary.orders}
+                    {summary?.orders ?? summary?.ORDER_COMPLETED ?? 0}
                 </p>
             </div>
         </div>

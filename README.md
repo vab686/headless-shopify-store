@@ -1,235 +1,207 @@
-# Shopify Headless Store
+# Shopify Headless Store Frontend
 
-A full-stack **Headless Shopify E-commerce Application** built as part of a technical assessment. The project uses **Shopify Storefront API** for product management, **Express.js** as the backend API, **MongoDB** for user-specific data, and **Next.js** for the frontend application.
-
-The application demonstrates modern full-stack development practices including authentication, API integration, state management, responsive UI, and clean architecture.
+A modern **Next.js 15** frontend for a Shopify Headless E-commerce application. The application integrates with a custom **Express.js** backend and the **Shopify Storefront GraphQL API** to provide a complete shopping experience with **User Registration**, **Email & Password Authentication**, **JWT Authorization**, **Product Catalog**, **Shopping Cart**, **Wishlist**, **Checkout**, **Orders**, and **User Activity Tracking**.
 
 ---
 
 # Features
 
-## Authentication
+## Authentication & Authorization
 
-* Google OAuth Login
-* JWT Authentication
-* Protected Routes
-* User Profile
-
-## Product Catalog
-
-* Product Listing
-* Product Details
-* Search Products
-* Category Filtering
-* Product Variants
-* Responsive Product Grid
-
-## Shopping Features
-
-* Shopping Cart
-* Wishlist
-* Checkout
-* Order History
-* Activity Dashboard
-
-## Technical Features
-
-* Shopify Storefront API Integration
-* MongoDB Database
-* RESTful API
-* React Query
-* Tailwind CSS
-* Global Error Handling
-* Toast Notifications
-* Responsive Design
+- User Registration (Sign Up)
+- Email & Password Login
+- JWT Authentication
+- Protected Routes
+- Persistent Login
+- Automatic Session Restoration
+- Automatic Logout on Unauthorized Access
+- Route Protection using Auth Context
 
 ---
 
-# Technology Stack
+## Products
 
-## Frontend
-
-* Next.js 15
-* React 19
-* Tailwind CSS
-* React Query (TanStack Query)
-* Axios
-* Google OAuth
-* React Hot Toast
-* Lucide React
-
-## Backend
-
-* Node.js
-* Express.js
-* MongoDB
-* Mongoose
-* JWT Authentication
-* Google OAuth Verification
-* Shopify Storefront GraphQL API
-* Swagger (OpenAPI)
-* Postman Collection
-
-## Database
-
-* MongoDB
-
-## External Services
-
-* Shopify Development Store
-* Google OAuth
+- Product Listing
+- Product Details
+- Product Search
+- Category Filtering
+- Responsive Product Grid
+- Image Optimization
 
 ---
 
-# Repository Structure
+## Shopping Cart
+
+- Add to Cart
+- Update Quantity
+- Remove Items
+- Cart Summary
+- Empty Cart State
+
+---
+
+## Wishlist
+
+- Add to Wishlist
+- Remove from Wishlist
+- Wishlist Page
+
+---
+
+## Checkout
+
+- Shipping Information
+- Order Placement
+- Order Confirmation
+
+---
+
+## Orders
+
+- Order History
+- Order Details
+- Order Summary
+
+---
+
+## Activity Dashboard
+
+- Activity Timeline
+- Activity Summary
+- User Action Tracking
+
+---
+
+## UI Features
+
+- Responsive Design
+- Tailwind CSS
+- Loading States
+- Toast Notifications
+- Global Error Handling
+- Custom 404 Page
+- Error Boundary
+- Session Persistence
+
+---
+
+# Tech Stack
+
+- Next.js 15 (App Router)
+- React 19
+- Tailwind CSS
+- Axios
+- React Context API
+- TanStack React Query
+- React Hot Toast
+- Lucide React Icons
+
+---
+
+# Project Structure
 
 ```text
-headless-shopify-store/
+src/
 │
-├── backend/
-│   ├── src/
-│   ├── docs/
-│   ├── package.json
-│   ├── README.md
-│   ├── swagger.json
-│   ├── postman_collection.json
-│   └── ARCHITECTURE.md
+├── app/
+│   ├── (auth)/
+│   │   ├── login/
+│   │   └── signup/
+│   │
+│   ├── (protected)/
+│   │   ├── activity/
+│   │   ├── cart/
+│   │   ├── checkout/
+│   │   ├── orders/
+│   │   ├── products/
+│   │   ├── wishlist/
+│   │   └── layout.js
+│   │
+│   ├── error.js
+│   ├── loading.js
+│   ├── not-found.js
+│   ├── globals.css
+│   └── layout.js
 │
-├── frontend/
-│   ├── src/
-│   ├── public/
-│   ├── package.json
-│   ├── README.md
-│   └── next.config.js
+├── components/
+│   ├── activity/
+│   ├── auth/
+│   │   ├── AuthLayout.jsx
+│   │   ├── LoginForm.jsx
+│   │   ├── SignupForm.jsx
+│   │   └── ProtectedRoute.jsx
+│   │
+│   ├── cart/
+│   ├── checkout/
+│   ├── common/
+│   ├── layout/
+│   ├── product/
+│   └── wishlist/
 │
-├── .gitignore
-└── README.md
+├── context/
+│   └── AuthContext.js
+│
+├── hooks/
+│   └── useAuth.js
+│
+├── lib/
+│   ├── axios.js
+│   ├── constants.js
+│   ├── errorHandler.js
+│   └── queryKeys.js
+│
+├── providers/
+│
+├── queries/
+│
+├── services/
+│   └── auth.service.js
+│
+├── utils/
+│   └── storage.js
+│
+└── middleware.js
 ```
 
 ---
 
-# System Architecture
+# Getting Started
 
-```text
-                    +-----------------------+
-                    |     Next.js Client    |
-                    +-----------+-----------+
-                                |
-                                | HTTPS / REST
-                                |
-                    +-----------v-----------+
-                    |     Express API       |
-                    | Authentication        |
-                    | Business Logic        |
-                    | Validation            |
-                    +-----+-----------+-----+
-                          |           |
-              MongoDB     |           | Shopify Storefront API
-                          |           |
-               +----------v-+     +---v----------------+
-               | Users      |     | Products           |
-               | Cart       |     | Collections        |
-               | Wishlist   |     | Variants           |
-               | Orders     |     | Images             |
-               | Activity   |     +--------------------+
-               +------------+
-```
-
----
-
-# Prerequisites
-
-Before running the project, install:
-
-* Node.js (v20 or later)
-* npm
-* MongoDB
-* Git
-* Shopify Development Store
-* Google OAuth Credentials
-
----
-
-# Setup Instructions
-
-## 1. Clone Repository
+## Clone Repository
 
 ```bash
-git clone https://github.com/<YOUR_USERNAME>/headless-shopify-store.git
-cd headless-shopify-store
-```
-
----
-
-## 2. Backend Setup
-
-```bash
-cd backend
-npm install
-```
-
-Create a `.env` file.
-
-Example:
-
-```env
-PORT=5000
-
-MONGODB_URI=your_mongodb_connection_string
-
-JWT_SECRET=your_jwt_secret
-
-GOOGLE_CLIENT_ID=your_google_client_id
-
-SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
-
-SHOPIFY_STOREFRONT_ACCESS_TOKEN=your_storefront_access_token
-
-SHOPIFY_API_VERSION=2025-01
-```
-
-Run the backend:
-
-```bash
-npm run dev
-```
-
-Backend URL:
-
-```
-http://localhost:5000
-```
-
----
-
-## 3. Frontend Setup
-
-Open a new terminal.
-
-```bash
+git clone <repository-url>
 cd frontend
+```
+
+---
+
+## Install Dependencies
+
+```bash
 npm install
 ```
 
-Create a `.env.local` file.
+---
 
-Example:
+## Environment Variables
+
+Create a `.env.local` file in the project root.
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:5000/api
-
-NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_google_client_id
-
 NEXT_PUBLIC_APP_NAME=Shopify Headless Store
 ```
 
-Run the frontend:
+---
+
+## Run Development Server
 
 ```bash
 npm run dev
 ```
 
-Frontend URL:
+Application will be available at:
 
 ```
 http://localhost:3000
@@ -237,157 +209,300 @@ http://localhost:3000
 
 ---
 
-# API Documentation
+# Build Application
 
-Swagger documentation:
-
-```
-http://localhost:5000/api-docs
-```
-
-Postman collection is available in the backend directory.
-
-```
-backend/postman_collection.json
+```bash
+npm run build
 ```
 
 ---
 
-# Project Documentation
+# Start Production Server
 
-| File                            | Description            |
-| ------------------------------- | ---------------------- |
-| backend/README.md               | Backend documentation  |
-| frontend/README.md              | Frontend documentation |
-| backend/swagger.json            | OpenAPI specification  |
-| backend/postman_collection.json | API testing collection |
-| backend/ARCHITECTURE.md         | Backend architecture   |
+```bash
+npm start
+```
+
+---
+
+# Backend Requirements
+
+The frontend requires the backend server to be running.
+
+Default Backend URL:
+
+```
+http://localhost:5000/api
+```
+
+---
+
+# API Endpoints Used
+
+## Authentication
+
+| Method | Endpoint | Description |
+|----------|----------------|----------------------------|
+| POST | /auth/signup | Register a new user |
+| POST | /auth/login | Login with Email & Password |
+| GET | /auth/me | Get Logged-in User |
+
+---
+
+## Products
+
+| Method | Endpoint |
+|----------|----------------------|
+| GET | /products |
+| GET | /products/:handle |
+
+---
+
+## Cart
+
+| Method | Endpoint |
+|----------|----------------------|
+| GET | /cart |
+| POST | /cart |
+| PUT | /cart/:variantId |
+| DELETE | /cart/:variantId |
+
+---
+
+## Wishlist
+
+| Method | Endpoint |
+|----------|--------------------------|
+| GET | /wishlist |
+| POST | /wishlist |
+| DELETE | /wishlist/:productId |
+
+---
+
+## Checkout
+
+| Method | Endpoint |
+|----------|-----------------------|
+| POST | /checkout |
+
+---
+
+## Orders
+
+| Method | Endpoint |
+|----------|------------------------------|
+| GET | /checkout/orders |
+| GET | /checkout/orders/:id |
+
+---
+
+## Activity
+
+| Method | Endpoint |
+|----------|----------------------------|
+| GET | /activity/history |
+| GET | /activity/summary |
 
 ---
 
 # Authentication Flow
 
 ```text
-Google Login
-      │
-      ▼
-Google OAuth
-      │
-      ▼
-Express Backend
-      │
-Verify Google Token
-      │
-Generate JWT
-      │
-      ▼
-Frontend Stores JWT
-      │
-      ▼
-Authenticated API Requests
+User Registration / Login
+            │
+            ▼
+Email & Password
+            │
+            ▼
+Backend Authentication
+            │
+            ▼
+JWT Token Generated
+            │
+            ▼
+Stored in Local Storage
+            │
+            ▼
+AuthContext Initialization
+            │
+            ▼
+Protected Routes
 ```
+
+---
+
+# Authentication Architecture
+
+```text
+Login / Signup Page
+        │
+        ▼
+LoginForm / SignupForm
+        │
+        ▼
+AuthContext
+        │
+        ▼
+Auth Service
+        │
+        ▼
+Axios Client
+        │
+        ▼
+Express Backend
+        │
+        ▼
+JWT Authentication
+        │
+        ▼
+Local Storage
+        │
+        ▼
+Protected Routes
+```
+
+---
+
+# Session Management
+
+The application uses **JWT Authentication** together with **React Context API** for centralized authentication state management.
+
+### Features
+
+- Automatic session restoration
+- Persistent authentication after refresh
+- Protected routes
+- Global authentication state
+- Automatic logout on invalid JWT
+- Axios Request Interceptor
+- Axios Response Interceptor
+- Automatic redirect to Login on Unauthorized responses
 
 ---
 
 # Application Flow
 
 ```text
-Login
-   │
-   ▼
+Sign Up / Login
+        │
+        ▼
 Products
-   │
-   ▼
+        │
+        ▼
 Product Details
-   │
-   ├───────────────┐
-   ▼               ▼
-Wishlist        Add To Cart
-                    │
-                    ▼
-                  Cart
-                    │
-                    ▼
-                 Checkout
-                    │
-                    ▼
-                 Orders
-                    │
-                    ▼
-           Activity Dashboard
+        │
+        ▼
+Add to Cart / Wishlist
+        │
+        ▼
+Shopping Cart
+        │
+        ▼
+Checkout
+        │
+        ▼
+Orders
+        │
+        ▼
+Activity Dashboard
 ```
 
 ---
 
-# Assignment Requirements Covered
+# Available Scripts
 
-* Shopify Development Store
-* 5–10 Products
-* Product Variants
-* Product Collections
-* Google Authentication
-* JWT Authentication
-* Product Listing
-* Product Details
-* Shopping Cart
-* Wishlist
-* Checkout
-* Order Management
-* Activity Tracking
-* REST API
-* Swagger Documentation
-* Postman Collection
-* Architecture Document
-* Responsive UI
-* Error Handling
+| Command | Description |
+|----------|-------------------------------|
+| npm run dev | Start Development Server |
+| npm run build | Build Production Bundle |
+| npm start | Start Production Server |
+| npm run lint | Run ESLint |
 
 ---
 
-# Build Commands
+# Performance Optimizations
 
-## Backend
+- Next.js App Router
+- Server Components
+- React Query Caching
+- Context-based Authentication
+- Session Restoration
+- Axios Interceptors
+- Image Optimization
+- Lazy Loading
+- Responsive Images
+- API Request Caching
+
+---
+
+# Error Handling
+
+- Global Error Boundary
+- Axios Response Interceptors
+- Unauthorized Redirect
+- Authentication Error Handling
+- Form Validation
+- Loading UI
+- Custom 404 Page
+- Toast Notifications
+
+---
+
+# Deployment
+
+## Vercel
+
+Install Vercel CLI
 
 ```bash
-cd backend
-npm run build
-npm start
+npm install -g vercel
 ```
 
-## Frontend
+Deploy
 
 ```bash
-cd frontend
-npm run build
-npm start
+vercel
 ```
+
+---
+
+# Browser Support
+
+- Google Chrome
+- Microsoft Edge
+- Mozilla Firefox
+- Safari
 
 ---
 
 # Future Improvements
 
-* Product Reviews
-* Payment Gateway Integration
-* Address Management
-* Coupon System
-* Inventory Synchronization
-* Product Recommendations
-* Pagination
-* Sorting
-* Unit Testing
-* Integration Testing
-* CI/CD Pipeline
-* Docker Support
+- Refresh Token Authentication
+- User Profile Management
+- Address Management
+- Product Pagination
+- Product Sorting
+- Product Reviews
+- Multiple Product Images
+- Recently Viewed Products
+- Coupon Management
+- Payment Gateway Integration
+- Dark Mode
+- Internationalization (i18n)
+- Unit Testing
+- Integration Testing
+- End-to-End Testing
 
 ---
 
 # License
 
-This project was developed as part of a Shopify Headless Store technical assessment and is intended for educational and demonstration purposes.
+This project was developed as part of the **Shopify Headless Store Assignment** and is intended for educational and demonstration purposes.
 
 ---
 
 # Author
 
-**Vaibhav Patel**
+**Developer:** Vaibhav Patel
 
-Built using **Next.js**, **Express.js**, **MongoDB**, **Shopify Storefront API**, **React Query**, and **Google OAuth**.
+Built with **Next.js 15**, **React 19**, **Tailwind CSS**, **TanStack React Query**, **Axios**, **React Context API**, **JWT Authentication**, **Express.js**, **MongoDB**, and the **Shopify Storefront GraphQL API**.

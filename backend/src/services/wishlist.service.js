@@ -23,6 +23,7 @@ const addToWishlist = async (userId, data) => {
         user: userId,
         productId: data.productId,
         title: data.title,
+        handle: data.handle || "",
         image: data.image,
         price: data.price
     });

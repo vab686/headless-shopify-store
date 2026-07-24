@@ -1,9 +1,30 @@
-export default function ProductSkeleton() {
+"use client";
+
+import { useState } from "react";
+
+export default function ProductImage({ src, title, className = "" }) {
+    const [error, setError] = useState(false);
+
+    const imageUrl = typeof src === "string" 
+        ? src 
+        : (src?.url || "");
+
+    if (!imageUrl || error) {
+        return (
+            <div className={`aspect-square flex items-center justify-center rounded-lg bg-gray-100 font-bold text-gray-400 text-2xl ${className}`}>
+                <span>{title ? title.charAt(0) : "P"}</span>
+            </div>
+        );
+    }
+
     return (
-        <div className="animate-pulse rounded-lg bg-white p-4 shadow">
-            <div className="aspect-square rounded bg-slate-200" />
-            <div className="mt-4 h-5 rounded bg-slate-200" />
-            <div className="mt-2 h-5 w-24 rounded bg-slate-200" />
+        <div className={`aspect-square overflow-hidden rounded-lg bg-gray-100 ${className}`}>
+            <img
+                src={imageUrl}
+                alt={title || "Product image"}
+                onError={() => setError(true)}
+                className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+            />
         </div>
     );
 }

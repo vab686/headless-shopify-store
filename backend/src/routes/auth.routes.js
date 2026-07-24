@@ -1,17 +1,33 @@
-const router = require("express").Router();
+const { Router } = require("express");
+const {
+    signup,
+    login,
+    getCurrentUser
+} = require("../controllers/auth.controller");
+const { authenticate } = require("../middleware/auth.middleware");
+const {
+    validateSignup,
+    validateLogin
+} = require("../validations/auth.validation");
 
-const authController = require("../controllers/auth.controller");
-const authMiddleware = require("../middleware/auth.middleware");
+const router = Router();
 
 router.post(
-    "/google",
-    authController.googleLogin
+    "/signup",
+    validateSignup,
+    signup
+);
+
+router.post(
+    "/login",
+    validateLogin,
+    login
 );
 
 router.get(
     "/me",
-    authMiddleware,
-    authController.getProfile
+    authenticate,
+    getCurrentUser
 );
 
 module.exports = router;

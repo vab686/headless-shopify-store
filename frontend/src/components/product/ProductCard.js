@@ -4,11 +4,14 @@ import { formatCurrency } from "../../utils/currency";
 import AddToWishlistButton from "../wishlist/AddToWishlistButton";
 
 export default function ProductCard({ product }) {
+    const price = product.priceRange?.minVariantPrice?.amount ?? product.price;
+    const imageUrl = product.featuredImage?.url ?? product.featuredImage ?? product.image;
+
     return (
         <div className="rounded-lg bg-white p-4 shadow transition hover:shadow-lg">
             <Link href={`/products/${product.handle}`}>
                 <ProductImage
-                    src={product.featuredImage}
+                    src={imageUrl}
                     title={product.title}
                 />
             </Link>
@@ -20,7 +23,7 @@ export default function ProductCard({ product }) {
                     </h2>
 
                     <p className="mt-2 text-xl font-bold text-blue-600">
-                        {formatCurrency(product.price)}
+                        {formatCurrency(price)}
                     </p>
                 </div>
 

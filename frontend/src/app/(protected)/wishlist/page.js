@@ -16,7 +16,12 @@ export default function WishlistPage() {
         );
     }
 
-    if (!data?.length) {
+    // Backend may return array or object with items array
+    const items = Array.isArray(data)
+        ? data
+        : (data?.items ?? []);
+
+    if (!items.length) {
         return (
             <PageContainer>
                 <EmptyWishlist />
@@ -26,7 +31,7 @@ export default function WishlistPage() {
 
     return (
         <PageContainer>
-            <WishlistGrid items={data} />
+            <WishlistGrid items={items} />
         </PageContainer>
     );
 }
