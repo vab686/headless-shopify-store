@@ -26,12 +26,16 @@ api.interceptors.response.use(
             error.response?.data?.message ||
             "Something went wrong";
 
-        toast.error(message);
+        // Only show toast for non-401 errors or if user has a token (session expired scenario)
+        const token = storage.getToken();
+        if (error.response?.status !== 401) {
+            toast.error(message);
+        }
 
         if (error.response?.status === 401) {
             storage.removeToken();
 
-            if (typeof window !== "undefined") {
+            if (token && typeof window !== "undefined") {
                 window.location.href = "/login";
             }
         }

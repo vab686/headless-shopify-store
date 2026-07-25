@@ -1,7 +1,10 @@
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import QueryProvider from "../providers/QueryProvider";
 import { AuthProvider } from "../context/AuthContext";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Shopify Headless Store",
@@ -11,7 +14,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className={inter.className}>
         <QueryProvider>
           <AuthProvider>
             {children}

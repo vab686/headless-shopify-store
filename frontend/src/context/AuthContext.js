@@ -62,8 +62,7 @@ export function AuthProvider({ children }) {
 
     const logout = () => {
         storage.removeToken();
-        setUser(null);
-        window.location.href = "/login";
+        window.location.href = "/products";
     };
 
     return (

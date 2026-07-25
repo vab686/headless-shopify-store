@@ -1,6 +1,8 @@
 # Shopify Headless Store Frontend
 
-A modern **Next.js 15** frontend for a Shopify Headless E-commerce application. The application integrates with a custom **Express.js** backend and the **Shopify Storefront GraphQL API** to provide a complete shopping experience with **User Registration**, **Email & Password Authentication**, **JWT Authorization**, **Product Catalog**, **Shopping Cart**, **Wishlist**, **Checkout**, **Orders**, and **User Activity Tracking**.
+A modern **Next.js 15** frontend for a Shopify Headless E-commerce application. The application integrates with a custom **Express.js** backend and the **Shopify Storefront GraphQL API** to provide a complete shopping experience with **Guest Product Browsing**, **User Registration**, **Email & Password Authentication**, **JWT Authorization**, **Product Catalog**, **Shopping Cart**, **Wishlist**, **Checkout**, **Orders**, and **User Activity Tracking**.
+
+> ✅ **Users can browse products without logging in.** Authentication is only required for actions like adding to cart, wishlist, or proceeding to checkout.
 
 ---
 
@@ -11,39 +13,47 @@ A modern **Next.js 15** frontend for a Shopify Headless E-commerce application. 
 - User Registration (Sign Up)
 - Email & Password Login
 - JWT Authentication
-- Protected Routes
+- **Public product browsing — no login required**
+- Protected Routes for authenticated actions (Cart, Wishlist, Checkout, Orders, Activity)
 - Persistent Login
 - Automatic Session Restoration
-- Automatic Logout on Unauthorized Access
-- Route Protection using Auth Context
+- Automatic Logout on Expired Session (redirects to `/login`)
+- Guest users redirected to `/login` only when attempting a protected action
+- Logout redirects to the Products page (not the Login page)
+- Route Protection using Auth Context and `ProtectedRoute` component
 
 ---
 
 ## Products
 
+- **Public product browsing without login**
 - Product Listing
 - Product Details
 - Product Search
 - Category Filtering
 - Responsive Product Grid
 - Image Optimization
+- Wishlist toggle on product cards (requires login)
 
 ---
 
 ## Shopping Cart
 
-- Add to Cart
+- Add to Cart (requires login — redirects guest to `/login`)
+- Toast notification on item added
+- Button feedback (loading spinner → green checkmark)
 - Update Quantity
 - Remove Items
-- Cart Summary
+- Cart Summary with Checkout and View Orders buttons
 - Empty Cart State
 
 ---
 
 ## Wishlist
 
-- Add to Wishlist
+- Add to Wishlist (requires login — redirects guest to `/login`)
 - Remove from Wishlist
+- Real-time heart icon toggle on product cards
 - Wishlist Page
 
 ---
@@ -104,22 +114,21 @@ A modern **Next.js 15** frontend for a Shopify Headless E-commerce application. 
 src/
 │
 ├── app/
-│   ├── (auth)/
-│   │   ├── login/
-│   │   └── signup/
+│   ├── (main)/
+│   │   ├── (protected)/          ← Auth-required routes
+│   │   │   ├── activity/
+│   │   │   ├── cart/
+│   │   │   ├── checkout/
+│   │   │   ├── orders/
+│   │   │   ├── wishlist/
+│   │   │   └── layout.js         ← Wraps with ProtectedRoute
+│   │   │
+│   │   ├── products/             ← Public route (no login needed)
+│   │   │   └── [handle]/
+│   │   └── layout.js             ← Renders Navbar
 │   │
-│   ├── (protected)/
-│   │   ├── activity/
-│   │   ├── cart/
-│   │   ├── checkout/
-│   │   ├── orders/
-│   │   ├── products/
-│   │   ├── wishlist/
-│   │   └── layout.js
-│   │
-│   ├── error.js
-│   ├── loading.js
-│   ├── not-found.js
+│   ├── login/                    ← Public auth page
+│   ├── signup/                   ← Public auth page
 │   ├── globals.css
 │   └── layout.js
 │
@@ -371,34 +380,37 @@ The application uses **JWT Authentication** together with **React Context API** 
 
 - Automatic session restoration
 - Persistent authentication after refresh
-- Protected routes
+- Protected routes for authenticated actions
+- Public routes accessible without authentication
 - Global authentication state
-- Automatic logout on invalid JWT
-- Axios Request Interceptor
-- Axios Response Interceptor
-- Automatic redirect to Login on Unauthorized responses
+- Automatic logout on expired JWT — redirects to `/login`
+- Logout redirects to `/products` (not the login page)
+- Axios Request Interceptor adds Bearer token when available
+- Axios Response Interceptor handles 401 errors:
+  - If a token existed → session expired → redirect to `/login`
+  - If no token → guest user → no redirect (allows public browsing)
+- `useWishlist` query is disabled for unauthenticated users to prevent spurious 401 errors
 
 ---
 
 # Application Flow
 
 ```text
-Sign Up / Login
+Products (public — no login needed)
         │
         ▼
-Products
-        │
-        ▼
-Product Details
+Product Details (public)
         │
         ▼
 Add to Cart / Wishlist
+  (guest → prompt Login)
+  (logged in → direct action)
         │
         ▼
 Shopping Cart
         │
         ▼
-Checkout
+Checkout (shipping details)
         │
         ▼
 Orders

@@ -1,9 +1,9 @@
 "use client";
 
-import PageContainer from "../../../components/layout/PageContainer";
-import EmptyOrders from "../../../components/checkout/EmptyOrders";
-import OrderList from "../../../components/checkout/OrderList";
-import { useOrders } from "../../../queries/order.query";
+import PageContainer from "../../../../components/layout/PageContainer";
+import EmptyOrders from "../../../../components/checkout/EmptyOrders";
+import OrderList from "../../../../components/checkout/OrderList";
+import { useOrders } from "../../../../queries/order.query";
 
 export default function OrdersPage() {
     const { data, isLoading } = useOrders();

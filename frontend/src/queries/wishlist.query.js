@@ -10,10 +10,11 @@ import {
     removeWishlistItem
 } from "../services/wishlist.service";
 
-export function useWishlist() {
+export function useWishlist(enabled = true) {
     return useQuery({
         queryKey: ["wishlist"],
-        queryFn: getWishlist
+        queryFn: getWishlist,
+        enabled: !!enabled
     });
 }
 

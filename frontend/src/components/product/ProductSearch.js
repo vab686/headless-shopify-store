@@ -11,7 +11,7 @@ export default function ProductSearch({ value, onChange }) {
                 value={value}
                 onChange={event => onChange(event.target.value)}
                 placeholder="Search products..."
-                className="w-full rounded-xl border bg-white py-3 pl-10 pr-4 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
+                className="w-full rounded-xl border border-gray-200 bg-white py-3 pl-10 pr-4 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all placeholder:text-gray-400"
             />
         </div>
     );

@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import PageContainer from "../../../../components/layout/PageContainer";
 import ProductDetails from "../../../../components/product/ProductDetails";
+import BackButton from "../../../../components/common/BackButton";
 import { getProduct } from "../../../../services/product.service";
 
 export default function ProductPage() {
@@ -24,6 +25,7 @@ export default function ProductPage() {
 
     return (
         <PageContainer>
+            <BackButton label="Back to Products" />
             <ProductDetails product={data} />
         </PageContainer>
     );

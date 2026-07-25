@@ -1,9 +1,9 @@
 "use client";
 
-import PageContainer from "../../../components/layout/PageContainer";
-import WishlistGrid from "../../../components/wishlist/WishlistGrid";
-import EmptyWishlist from "../../../components/wishlist/EmptyWishlist";
-import { useWishlist } from "../../../queries/wishlist.query";
+import PageContainer from "../../../../components/layout/PageContainer";
+import WishlistGrid from "../../../../components/wishlist/WishlistGrid";
+import EmptyWishlist from "../../../../components/wishlist/EmptyWishlist";
+import { useWishlist } from "../../../../queries/wishlist.query";
 
 export default function WishlistPage() {
     const { data, isLoading } = useWishlist();
