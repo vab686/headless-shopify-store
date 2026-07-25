@@ -11,6 +11,8 @@ const {
     specs
 } = require("./config/swagger");
 
+const connectDB = require("./config/db");
+
 const app = express();
 
 app.use(cors());
@@ -18,6 +20,16 @@ app.use(cors());
 app.use(helmet());
 
 app.use(morgan("dev"));
+
+// Ensure MongoDB is connected before handling requests (Serverless / Vercel compatibility)
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (error) {
+        next(error);
+    }
+});
 
 app.use(express.json());
 
