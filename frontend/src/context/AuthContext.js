@@ -62,6 +62,7 @@ export function AuthProvider({ children }) {
 
     const logout = () => {
         storage.removeToken();
+        localStorage.removeItem("pendingCartItem");
         window.location.href = "/products";
     };
 

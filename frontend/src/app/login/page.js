@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import AuthLayout from "@/components/auth/AuthLayout";
 import LoginForm from "@/components/auth/LoginForm";
 import useAuth from "@/hooks/useAuth";
+import { addToCart } from "@/services/cart.service";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
 
@@ -27,7 +29,33 @@ export default function LoginPage() {
 
             await login(data);
 
-            router.push("/products");
+            // Check for a pending cart item saved before login redirect
+            const pendingItem = localStorage.getItem("pendingCartItem");
+
+            if (pendingItem) {
+                try {
+                    const product = JSON.parse(pendingItem);
+                    await addToCart(product);
+                    localStorage.removeItem("pendingCartItem");
+                    toast.success(`${product.title} added to cart!`, {
+                        duration: 3000,
+                        icon: "🛒",
+                        style: {
+                            borderRadius: "12px",
+                            background: "#fff",
+                            color: "#0f172a",
+                            boxShadow: "0 4px 24px rgba(0,0,0,0.10)",
+                            fontWeight: 500
+                        }
+                    });
+                    router.push("/cart");
+                } catch {
+                    localStorage.removeItem("pendingCartItem");
+                    router.push("/products");
+                }
+            } else {
+                router.push("/products");
+            }
 
         } catch (error) {
 

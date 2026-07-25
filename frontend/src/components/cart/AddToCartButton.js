@@ -1,25 +1,41 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useAddToCart } from "../../queries/cart.query";
-import { ShoppingCart, Check } from "lucide-react";
+import { ShoppingCart, Check, Eye } from "lucide-react";
 import toast from "react-hot-toast";
+import useAuth from "../../hooks/useAuth";
 
 export default function AddToCartButton({ product, className = "" }) {
     const { mutate, isPending } = useAddToCart();
+    const { authenticated } = useAuth();
+    const router = useRouter();
     const [justAdded, setJustAdded] = useState(false);
+    const [addedToCart, setAddedToCart] = useState(false);
+
+    const buildPayload = () => ({
+        productId: product.id,
+        variantId: product.variantId,
+        title: product.title,
+        image: product.image ?? product.featuredImage?.url ?? "",
+        price: typeof product.price === "number"
+            ? product.price
+            : parseFloat(product.priceRange?.minVariantPrice?.amount ?? product.price ?? 0),
+        quantity: 1
+    });
 
     const handleClick = () => {
-        mutate({
-            productId: product.id,
-            variantId: product.variantId,
-            title: product.title,
-            image: product.image ?? product.featuredImage?.url ?? "",
-            price: typeof product.price === "number"
-                ? product.price
-                : parseFloat(product.priceRange?.minVariantPrice?.amount ?? product.price ?? 0),
-            quantity: 1
-        }, {
+        // If the user is not logged in, save the product and redirect to login
+        if (!authenticated) {
+            const payload = buildPayload();
+            localStorage.setItem("pendingCartItem", JSON.stringify(payload));
+            router.push("/login");
+            return;
+        }
+
+        mutate(buildPayload(), {
             onSuccess: () => {
                 toast.success(`${product.title} added to cart!`, {
                     duration: 3000,
@@ -33,6 +49,7 @@ export default function AddToCartButton({ product, className = "" }) {
                     }
                 });
                 setJustAdded(true);
+                setAddedToCart(true);
                 setTimeout(() => setJustAdded(false), 2500);
             },
             onError: () => {
@@ -42,34 +59,46 @@ export default function AddToCartButton({ product, className = "" }) {
     };
 
     return (
-        <button
-            onClick={handleClick}
-            disabled={isPending || justAdded}
-            className={`flex items-center justify-center gap-2 rounded-xl px-8 py-4 text-base font-bold text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed transition-all duration-300 ${
-                justAdded
-                    ? "bg-green-500 hover:bg-green-600 focus:ring-green-400 scale-95"
-                    : "bg-indigo-600 hover:bg-indigo-700 hover:shadow-md focus:ring-indigo-500"
-            } ${className}`}
-        >
-            {isPending ? (
-                <>
-                    <svg className="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
-                    Adding...
-                </>
-            ) : justAdded ? (
-                <>
-                    <Check className="h-5 w-5" />
-                    Added to Cart!
-                </>
-            ) : (
-                <>
-                    <ShoppingCart className="h-5 w-5" />
-                    Add to Cart
-                </>
+        <div className={`flex flex-col gap-3 ${className}`}>
+            <button
+                onClick={handleClick}
+                disabled={isPending || justAdded}
+                className={`flex items-center justify-center gap-2 rounded-xl px-8 py-4 text-base font-bold text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed transition-all duration-300 w-full ${
+                    justAdded
+                        ? "bg-green-500 hover:bg-green-600 focus:ring-green-400 scale-95"
+                        : "bg-indigo-600 hover:bg-indigo-700 hover:shadow-md focus:ring-indigo-500"
+                }`}
+            >
+                {isPending ? (
+                    <>
+                        <svg className="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        Adding...
+                    </>
+                ) : justAdded ? (
+                    <>
+                        <Check className="h-5 w-5" />
+                        Added to Cart!
+                    </>
+                ) : (
+                    <>
+                        <ShoppingCart className="h-5 w-5" />
+                        Add to Cart
+                    </>
+                )}
+            </button>
+
+            {addedToCart && (
+                <Link
+                    href="/cart"
+                    className="flex items-center justify-center gap-2 rounded-xl px-8 py-3 text-base font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 shadow-sm transition-all duration-300 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                    <Eye className="h-5 w-5" />
+                    View Cart
+                </Link>
             )}
-        </button>
+        </div>
     );
 }
